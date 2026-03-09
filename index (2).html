@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home - Classroom</title>
+  <link id="favicon" rel="icon" href="classroom.png" type="image/png" />
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin-bottom: 10px; display: block; }
+    iframe { width: 100%; height: 90vh; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>HTML 파일 실행기</h1>
+  <p>파일 탐색기로 HTML 파일을 선택하면 아래 프레임에서 바로 실행됩니다. **반드시 로컬 서버에서 열어야 WebGL이 작동합니다.**</p>
+
+  <label>HTML 파일 선택:</label>
+  <input type="file" id="file-input" accept=".html,.htm" />
+
+  <label>탭 제목 바꾸기:</label>
+  <input type="text" id="title-input" placeholder="새 탭 제목 입력" />
+
+  <label>파비콘 변경 (URL 입력):</label>
+  <input type="text" id="favicon-input" placeholder="https://example.com/favicon.ico" />
+  <button id="apply-favicon">적용</button>
+
+  <h3>실행 결과:</h3>
+  <iframe id="view-area"></iframe>
+
+  <script>
+    const fileInput = document.getElementById("file-input");
+    const viewArea = document.getElementById("view-area");
+    const titleInput = document.getElementById("title-input");
+    const faviconInput = document.getElementById("favicon-input");
+    const applyFaviconBtn = document.getElementById("apply-favicon");
+    const faviconLink = document.getElementById("favicon");
+
+    // 서버 경로 기반 iframe 로딩
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!file.name.endsWith(".html") && !file.name.endsWith(".htm")) {
+        alert("HTML 파일만 열 수 있습니다.");
+        return;
+      }
+
+      // **중요:** 파일 이름만 iframe src로 지정 (서버에서 접근 가능해야 함)
+      const fileName = encodeURIComponent(file.name);
+      viewArea.src = fileName;
+    });
+
+    // 탭 제목 변경
+    titleInput.addEventListener("input", () => {
+      document.title = titleInput.value || "HTML 파일 실행기";
+    });
+
+    // 파비콘 변경
+    applyFaviconBtn.addEventListener("click", () => {
+      const url = faviconInput.value.trim();
+      if (url) {
+        faviconLink.href = url;
+      } else {
+        alert("유효한 URL을 입력하세요.");
+      }
+    });
+  </script>
+</body>
+</html>
